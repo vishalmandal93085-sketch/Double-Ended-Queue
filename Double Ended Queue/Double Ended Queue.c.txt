@@ -1,0 +1,135 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define structure
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Front and rear pointers
+struct Node* front = NULL;
+struct Node* rear = NULL;
+
+// Insert at front
+void insertFront(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    if (newNode == NULL) {
+        printf("Overflow!\n");
+        return;
+    }
+
+    newNode->data = value;
+    newNode->next = front;
+
+    if (front == NULL) { // Empty deque
+        front = rear = newNode;
+    } else {
+        front = newNode;
+    }
+
+    printf("Inserted at front: %d\n", value);
+}
+
+// Insert at rear
+void insertRear(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+
+    if (newNode == NULL) {
+        printf("Overflow!\n");
+        return;
+    }
+
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (rear == NULL) { // Empty deque
+        front = rear = newNode;
+    } else {
+        rear->next = newNode;
+        rear = newNode;
+    }
+
+    printf("Inserted at rear: %d\n", value);
+}
+
+// Delete from front
+void deleteFront() {
+    if (front == NULL) {
+        printf("Deque is empty!\n");
+        return;
+    }
+
+    struct Node* temp = front;
+    printf("Deleted from front: %d\n", temp->data);
+
+    front = front->next;
+
+    if (front == NULL) { // Deque becomes empty
+        rear = NULL;
+    }
+
+    free(temp);
+}
+
+// Delete from rear
+void deleteRear() {
+    if (rear == NULL) {
+        printf("Deque is empty!\n");
+        return;
+    }
+
+    struct Node* temp = rear;
+
+    if (front == rear) { // Only one element
+        printf("Deleted from rear: %d\n", rear->data);
+        front = rear = NULL;
+        free(temp);
+        return;
+    }
+
+    struct Node* ptr = front;
+    while (ptr->next != rear) {
+        ptr = ptr->next;
+    }
+
+    printf("Deleted from rear: %d\n", rear->data);
+    ptr->next = NULL;
+    rear = ptr;
+    free(temp);
+}
+
+// Display deque
+void display() {
+    if (front == NULL) {
+        printf("Deque is empty!\n");
+        return;
+    }
+
+    struct Node* temp = front;
+    printf("Deque elements: ");
+
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    insertFront(10);
+    insertRear(20);
+    insertFront(5);
+    insertRear(30);
+
+    display();
+
+    deleteFront();
+    deleteRear();
+
+    display();
+
+    return 0;
+}
